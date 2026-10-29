@@ -2,7 +2,8 @@ import { defineConfig, devices } from '@playwright/test';
 
 /**
  * Playwright configuration for UniVox PK
- * E2E tests for university browsing, student verification, and peer review submission
+ * E2E tests for university browsing, student verification, peer review submission,
+ * accessiblity, performance, mobile navigation, and animations
  */
 export default defineConfig({
   testDir: './e2e',
@@ -29,19 +30,30 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     /* Video on retry */
     video: 'on-first-retry',
+    /* Custom test ID attribute */
+    testIdAttribute: 'data-testid',
   },
 
   /* Configure projects for different test scenarios */
   projects: [
     {
-      name: 'Mobile Chrome (2G Network Simulation)',
+      name: 'Desktop Chrome',
+      use: {
+        ...devices['Desktop Chrome'],
+      },
+    },
+    {
+      name: 'iPhone 13',
       use: {
         ...devices['iPhone 13'],
       },
     },
     {
-      name: 'Desktop Chrome',
-      use: { ...devices['Desktop Chrome'] },
+      name: 'iPad Pro 11',
+      use: {
+        ...devices['iPad Pro 11'],
+        viewport: { width: 1024, height: 1366 },
+      },
     },
     {
       name: 'Mobile Safari (Urdu Locale)',
@@ -49,13 +61,6 @@ export default defineConfig({
         ...devices['iPhone 12'],
         locale: 'ur-PK',
         permissions: ['geolocation'],
-      },
-    },
-    {
-      name: 'Tablet View',
-      use: {
-        ...devices['iPad Pro 11'],
-        viewport: { width: 1024, height: 1366 },
       },
     },
   ],

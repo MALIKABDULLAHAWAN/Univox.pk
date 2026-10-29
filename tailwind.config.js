@@ -1,9 +1,45 @@
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: 'class',
-  content: ['./src/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
+  content: [
+    './src/**/*.{js,ts,jsx,tsx,mdx}',
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
+  ],
   theme: {
+    container: {
+      center: true,
+      padding: { DEFAULT: '20px', md: '32px', lg: '48px' },
+      screens: { '2xl': '1440px' },
+    },
     extend: {
       colors: {
+        background: 'hsl(var(--background) / <alpha-value>)',
+        foreground: 'hsl(var(--foreground) / <alpha-value>)',
+        surface: 'hsl(var(--surface) / <alpha-value>)',
+        'surface-elevated': 'hsl(var(--surface-elevated) / <alpha-value>)',
+        muted: 'hsl(var(--muted) / <alpha-value>)',
+        'muted-foreground': 'hsl(var(--muted-foreground) / <alpha-value>)',
+        border: 'hsl(var(--border) / <alpha-value>)',
+        input: 'hsl(var(--input) / <alpha-value>)',
+        ring: 'hsl(var(--ring) / <alpha-value>)',
+        accent: 'hsl(var(--accent) / <alpha-value>)',
+        star: 'hsl(var(--star) / <alpha-value>)',
+        primary: {
+          DEFAULT: 'hsl(var(--primary) / <alpha-value>)',
+          foreground: 'hsl(var(--primary-foreground) / <alpha-value>)',
+          50: '#f0f9ff',
+          100: '#e0f2fe',
+          200: '#bae6fd',
+          300: '#7dd3fc',
+          400: '#38bdf8',
+          500: '#0ea5e9',
+          600: '#0284c7',
+          700: '#0369a1',
+          800: '#075985',
+          900: '#0c4a6e',
+        },
         brand: {
           50: '#f0f9ff',
           100: '#e0f2fe',
@@ -16,40 +52,52 @@ module.exports = {
           800: '#075985',
           900: '#0c4a6e',
         },
-        primary: {
-          50: '#fef3c7',
-          100: '#fde68a',
-          200: '#fcd34d',
-          300: '#fbbf24',
-          400: '#f59e0b',
-          500: '#d97706',
-          600: '#b45f0b',
-          700: '#92400e',
-          800: '#78350f',
-          900: '#654321',
-        }
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive) / <alpha-value>)',
+          50: '#fef2f2',
+          500: '#ef4444',
+          700: '#b91c1c',
+        },
+        success: {
+          DEFAULT: 'hsl(var(--success) / <alpha-value>)',
+          50: '#ecfdf5',
+          500: '#10b981',
+          700: '#047857',
+        },
+        warning: {
+          DEFAULT: 'hsl(var(--warning) / <alpha-value>)',
+          50: '#fffbeb',
+          500: '#f59e0b',
+          700: '#b45309',
+        },
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
+        sans: ['var(--font-sans)', 'Inter', 'system-ui', 'sans-serif'],
+        display: ['var(--font-display)', 'Instrument Serif', 'Georgia', 'serif'],
+        mono: ['var(--font-mono)', 'JetBrains Mono', 'ui-monospace', 'monospace'],
         urdu: ['Jameel Noori Nastaleeq', 'Nafees', 'sans-serif'],
       },
-    },
-  },
-  plugins: [require('tailwindcss-animate')],
-};
-
-module.exports = {
-  darkMode: ['class'],
-  content: ['./src/**/*.{js,ts,jsx,tsx}', './pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
-  theme: {
-    extend: {
-      fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        urdu: ['Jameel Noori Nastaleeq', 'Nafees', 'sans-serif'],
+      borderRadius: {
+        card: 'var(--radius)',
+        sheet: '32px',
+        field: '9999px',
       },
-      colors: {
-        brand: '#0ea5e9',
-        primary: '#f59e0b',
+      boxShadow: {
+        soft: '0 4px 16px rgba(0, 0, 0, 0.06)',
+        lift: '0 20px 40px rgba(0, 0, 0, 0.10)',
+        glass: 'inset 0 0 0 1px rgba(0,0,0,0.06), 0 4px 24px rgba(0,0,0,0.06)',
+        physical:
+          '0 1px 2px rgba(5,26,36,0.10), 0 4px 4px rgba(5,26,36,0.09), 0 9px 6px rgba(5,26,36,0.05), 0 17px 7px rgba(5,26,36,0.01), inset 0 2px 8px rgba(255,255,255,0.5)',
+      },
+      maxWidth: {
+        content: '1440px',
+        lede: '32rem',
+      },
+      transitionTimingFunction: {
+        quint: 'cubic-bezier(0.22, 1, 0.36, 1)',
+        expo: 'cubic-bezier(0.16, 1, 0.3, 1)',
+        spring: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+        sheet: 'cubic-bezier(0.32, 0.72, 0, 1)',
       },
     },
   },

@@ -1,0 +1,710 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "Motion design spec for UniVox PK - University Review Platform targeting Pakistani students. Derived from MotionSites craft rules and technique library.",
+  "metadata": {
+    "project": "UniVox PK",
+    "platform": "Pakistani university review platform",
+    "audience": "Pakistani students (primary), university administrators, faculty",
+    "target_fps": 60,
+    "max_frame_budget_ms": 16.67,
+    "performance_target_ms_per_frame": 8,
+    "reduced_motion_support": true,
+    "prefers_reduced_motion_breakpoint": "all motion disabled, final state visible"
+  },
+  "responsive_breakpoints": {
+    "mobile": {
+      "min": 0,
+      "max": 767,
+      "alias": "sm",
+      "font_base_rem": 0.9375,
+      "safe_area": true,
+      "nav_mode": "bottom_sheet",
+      "hero_height": "100dvh",
+      "content_max_width_px": 640
+    },
+    "tablet": {
+      "min": 768,
+      "max": 1023,
+      "alias": "md",
+      "font_base_rem": 1,
+      "safe_area": true,
+      "nav_mode": "sidebar_drawer",
+      "hero_height": "100dvh",
+      "content_max_width_px": 1024
+    },
+    "desktop": {
+      "min": 1024,
+      "max": null,
+      "alias": "lg",
+      "font_base_rem": 1.0625,
+      "safe_area": true,
+      "nav_mode": "desktop_nav",
+      "hero_height": "100vh",
+      "content_max_width_px": 1440
+    },
+    "wide": {
+      "min": 1440,
+      "max": null,
+      "alias": "xl",
+      "font_base_rem": 1.125,
+      "container_max_width_px": 1440
+    }
+  },
+  "theme_tokens": {
+    "light": {
+      "background": "#f9fafb",
+      "surface": "#ffffff",
+      "surface_elevated": "#fcfcfc",
+      "foreground": "#111827",
+      "foreground_muted": "#6b7287",
+      "foreground_subtle": "#9ca3af",
+      "border": "#e5e7eb",
+      "border_subtle": "#f3f4f6",
+      "primary": "#0ea5e9",
+      "primary_hover": "#0287ce",
+      "success": "#22c55e",
+      "warning": "#f59e0b",
+      "error": "#ef4444"
+    },
+    "dark": {
+      "background": "#0a0a0a",
+      "surface": "#141414",
+      "surface_elevated": "#1a1a1a",
+      "foreground": "#f3f4f6",
+      "foreground_muted": "#9ca3af",
+      "foreground_subtle": "#6b7287",
+      "border": "#272727",
+      "border_subtle": "#1f1f1f",
+      "primary": "#38bdf8",
+      "primary_hover": "#7dd3fc",
+      "success": "#4ade80",
+      "warning": "#fbbf24",
+      "error": "#f87171"
+    }
+  },
+  "theme_transition": {
+    "duration_ms": 400,
+    "easing": "cubic-bezier(0.4, 0, 0.2, 1)",
+    "property": "background-color, color, border-color, fill, stroke",
+    "stagger_ms": 50,
+    "reduced_motion_duration_ms": 0
+  },
+  "interactive_state_colors": {
+    "primary_idle": "#0ea5e9",
+    "primary_hover": "#0287ce",
+    "primary_active": "#0c80c0",
+    "primary_focus_ring": "rgba(14, 165, 233, 0.4)",
+    "surface_idle": "#ffffff",
+    "surface_hover": "#f8fafc",
+    "surface_active": "#f1f5f9",
+    "surface_focus_ring": "rgba(16, 185, 129, 0.25)",
+    "text_primary_idle": "#111827",
+    "text_primary_hover": "#0369a3",
+    "text_secondary_idle": "#6b7287",
+    "text_secondary_hover": "#4b5563",
+    "star_idle": "#d1d5db",
+    "star_hover": "#fbbf24",
+    "star_selected": "#fbbf24",
+    "star_active": "#f59e0b"
+  },
+  "animation_timing": {
+    "easings": {
+      "standard": "cubic-bezier(0.4, 0, 0.2, 1)",
+      "emphasized": "cubic-bezier(0.2, 0, 0, 1)",
+      "decelerate": "cubic-bezier(0, 0, 0, 1)",
+      "accelerate": "cubic-bezier(0.2, 0, 0, 1)",
+      "ease_out_quint": "cubic-bezier(0.22, 1, 0.36, 1)",
+      "ease_out_expo": "cubic-bezier(0.16, 1, 0.3, 1)",
+      "ease_out_cubic": "cubic-bezier(0.215, 0.61, 0.355, 1)",
+      "ease_in_out": "cubic-bezier(0.4, 0, 0.2, 1)",
+      "spring_standard": "cubic-bezier(0.34, 1.56, 0.64, 1)",
+      "spring_overshoot": "cubic-bezier(0.34, 1.56, 0.64, 1)"
+    },
+    "durations_ms": {
+      "instant": 0,
+      "fastest": 50,
+      "fast": 100,
+      "moderate": 200,
+      "standard": 300,
+      "emphasized": 400,
+      "slow": 500,
+      "slower": 800,
+      "slowest": 1000,
+      "page_enter": 650,
+      "page_exit": 350,
+      "modal_enter": 250,
+      "modal_exit": 200,
+      "drawer_enter": 300,
+      "drawer_exit": 250,
+      "tooltip_enter": 120,
+      "tooltip_exit": 100,
+      "input_focus": 150,
+      "input_unfocus": 150,
+      "validation_feedback": 300,
+      "filter_change": 400,
+      "stagger_step": 50,
+      "carousel_drag": 300,
+      "carousel_settle": 640,
+      "toast_enter": 200,
+      "toast_exit": 160,
+      "badge_pop": 350,
+      "chip_toggle": 250
+    }
+  },
+  "motion_patterns": {
+    "university_cards_on_load_staggered": {
+      "name": "University Card Staggered Entrance",
+      "description": "University cards fade and rise into view in a staggered sequence when the page loads, creating a layered, premium feel.",
+      "trigger": "page load + font loading complete",
+      "base_delay_ms": 0,
+      "stagger_ms": 80,
+      "duration_ms": 700,
+      "easing": "ease_out_quint",
+      "from": {
+        "opacity": 0,
+        "translate_y_px": 30
+      },
+      "to": {
+        "opacity": 1,
+        "translate_y_px": 0
+      },
+      "children": [
+        {
+          "element": "filter_bar",
+          "delay_ms": 0,
+          "duration_ms": 600,
+          "offset_y": -15
+        },
+        {
+          "element": "university_card_0",
+          "delay_ms": 80,
+          "duration_ms": 700
+        },
+        {
+          "element": "university_card_1",
+          "delay_ms": 160,
+          "duration_ms": 700
+        },
+        {
+          "element": "university_card_2",
+          "delay_ms": 240,
+          "duration_ms": 700
+        },
+        {
+          "element": "university_card_3",
+          "delay_ms": 320,
+          "duration_ms": 700
+        },
+        {
+          "element": "university_card_4",
+          "delay_ms": 400,
+          "duration_ms": 700
+        },
+        {
+          "element": "university_card_5",
+          "delay_ms": 480,
+          "duration_ms": 700
+        },
+        {
+          "element": "pagination",
+          "delay_ms": 520,
+          "duration_ms": 600
+        }
+      ],
+      "total_sequence_duration_ms": 1200,
+      "prefers_reduced_motion": "all elements visible immediately, no animation",
+      "performance_notes": "max 6 cards per page to maintain frame budget"
+    },
+    "filter_panel_expand_collapse": {
+      "name": "Filter Panel Expansion",
+      "description": "The university filter panel expands and collapses with a smooth height transition and content fade.",
+      "trigger": "user click on filter toggle",
+      "duration_ms": 400,
+      "easing": "ease_out_expo",
+      "expand": {
+        "from": {
+          "height_px": 0,
+          "opacity": 0
+        },
+        "to": {
+          "height_px": "auto",
+          "opacity": 1
+        }
+      },
+      "collapse": {
+        "from": {
+          "height_px": "auto",
+          "opacity": 1
+        },
+        "to": {
+          "height_px": 0,
+          "opacity": 0
+        }
+      },
+      "content_stagger_ms": 60,
+      "prefers_reduced_motion": "instant expand/collapse with CSS only",
+      "mobile_variant": {
+        "duration_ms": 350,
+        "easing": "ease_out_cubic",
+        "full_screen": true,
+        "overlay_fade_ms": 250
+      }
+    },
+    "search_result_filtering": {
+      "name": "Search Result Filtering Animation",
+      "description": "When filters or search terms change, matching cards animate out while new results animate in with a staggered sequence.",
+      "trigger": "filter input change or search query update",
+      "exit_animation": {
+        "duration_ms": 250,
+        "easing": "standard",
+        "from": {
+          "opacity": 1,
+          "scale": 1
+        },
+        "to": {
+          "opacity": 0,
+          "scale": 0.96
+        }
+      },
+      "enter_animation": {
+        "duration_ms": 500,
+        "easing": "ease_out_quint",
+        "stagger_ms": 50,
+        "from": {
+          "opacity": 0,
+          "translate_y_px": 20
+        },
+        "to": {
+          "opacity": 1,
+          "translate_y_px": 0
+        }
+      },
+      "transition_delay_between_exit_enter_ms": 150,
+      "prefers_reduced_motion": "DOM update only, no animations"
+    },
+    "page_transitions": {
+      "name": "Page Transition",
+      "description": "Smooth transitions between major pages with content fade and slight parallax.",
+      "navigation_timing": {
+        "exit_duration_ms": 300,
+        "exit_easing": "ease_out_cubic",
+        "enter_duration_ms": 500,
+        "enter_easing": "ease_out_quint",
+        "enter_delay_ms": 100
+      },
+      "shared_element": {
+        "university_card_thumbnail": {
+          "duration_ms": 600,
+          "easing": "ease_out_expo"
+        },
+        "university_hero_image": {
+          "duration_ms": 800,
+          "easing": "ease_out_expo"
+        }
+      },
+      "background_overlay": {
+        "duration_ms": 350,
+        "easing": "ease_out_quint"
+      },
+      "prefers_reduced_motion": "instant navigation, no transition animations"
+    },
+    "mobile_drawer_navigation": {
+      "name": "Mobile Drawer Navigation",
+      "description": "Mobile hamburger menu expands into a bottom sheet with staggered link animations.",
+      "trigger": "hamburger button click",
+      "open": {
+        "overlay_fade_duration_ms": 250,
+        "overlay_fade_easing": "ease_out_cubic",
+        "panel_slide_duration_ms": 350,
+        "panel_slide_easing": "ease_out_expo",
+        "panel_slide_distance_vh": 100,
+        "link_stagger_ms": 50,
+        "link_fade_duration_ms": 400,
+        "link_fade_easing": "ease_out_quint",
+        "link_fade_from_offset_px": 15
+      },
+      "close": {
+        "overlay_fade_duration_ms": 200,
+        "panel_slide_duration_ms": 300,
+        "panel_slide_easing": "ease_out_cubic",
+        "link_stagger_reversed": true,
+        "link_fade_duration_ms": 250
+      },
+      "burger_to_x": {
+        "duration_ms": 300,
+        "easing": "ease_out_quint",
+        "top_bar_rotate_deg": 45,
+        "top_bar_offset_px": 6,
+        "bottom_bar_rotate_deg": -45,
+        "bottom_bar_offset_px": -6,
+        "middle_bar_fade_duration_ms": 150
+      },
+      "body_scroll_lock": true,
+      "escape_key_close": true,
+      "click_outside_close": true,
+      "prefers_reduced_motion": "overlay appears instantly, links visible without animation"
+    },
+    "star_rating_interactions": {
+      "name": "Star Rating Interaction",
+      "description": "Star rating on hover, click, and readonly display with smooth transitions.",
+      "interactive_star": {
+        "hover_fill": {
+          "duration_ms": 200,
+          "easing": "ease_out_cubic",
+          "from_fill": 0,
+          "to_fill": 1
+        },
+        "click_animate": {
+          "duration_ms": 350,
+          "easing": "ease_out_quint",
+          "pop_scale": 1.2,
+          "return_scale": 1
+        },
+        "partial_fill": {
+          "duration_ms": 150,
+          "easing": "ease_out_cubic",
+          "from_fill": 0.5,
+          "to_fill": 1
+        }
+      },
+      "readonly_display": {
+        "entry_duration_ms": 600,
+        "entry_easing": "ease_out_quint",
+        "stagger_ms": 70,
+        "from": {
+          "scale": 0,
+          "opacity": 0
+        },
+        "to": {
+          "scale": 1,
+          "opacity": 1
+        }
+      },
+      "rating_distribution_hover": {
+        "bar_width": {
+          "duration_ms": 250,
+          "easing": "ease_out_cubic"
+        },
+        "tooltip_fade": {
+          "duration_ms": 150,
+          "easing": "standard"
+        }
+      },
+      "color_states": {
+        "empty": "#d1d5db",
+        "hover": "#fbbf24",
+        "selected": "#fbbf24",
+        "active": "#f59e0b"
+      },
+      "prefers_reduced_motion": "instant fill on click, no hover animations"
+    },
+    "button_press_feedback": {
+      "name": "Button Press Feedback",
+      "description": "Tactile button press feedback with scale, color, and shadow changes.",
+      "primary_button": {
+        "idle": {
+          "background": "#0ea5e9",
+          "color": "#ffffff",
+          "shadow": "0 1px 3px rgba(0,0,0,0.1)"
+        },
+        "hover": {
+          "duration_ms": 200,
+          "easing": "ease_out_cubic",
+          "transform": "scale(1.03)",
+          "background": "#0287ce"
+        },
+        "active": {
+          "duration_ms": 100,
+          "easing": "ease_out_cubic",
+          "transform": "scale(0.97)",
+          "shadow": "0 1px 2px rgba(0,0,0,0.15)"
+        },
+        "focus_ring": {
+          "color": "rgba(14, 165, 233, 0.4)",
+          "offset_px": 2,
+          "width_px": 2
+        }
+      },
+      "secondary_button": {
+        "idle": {
+          "background": "transparent",
+          "color": "#111827",
+          "border": "1px solid #e5e7eb"
+        },
+        "hover": {
+          "duration_ms": 200,
+          "easing": "ease_out_cubic",
+          "transform": "scale(1.02)",
+          "background": "#f8fafc"
+        },
+        "active": {
+          "duration_ms": 100,
+          "easing": "ease_out_cubic",
+          "transform": "scale(0.98)"
+        }
+      },
+      "icon_button": {
+        "idle": {
+          "background": "transparent",
+          "transform": "scale(1)"
+        },
+        "hover": {
+          "duration_ms": 200,
+          "easing": "ease_out_cubic",
+          "transform": "scale(1.1)"
+        },
+        "active": {
+          "duration_ms": 100,
+          "easing": "ease_out_cubic",
+          "transform": "scale(0.92)"
+        }
+      },
+      "prefers_reduced_motion": "no scale transforms, only color changes on hover"
+    },
+    "form_validation_feedback": {
+      "name": "Form Validation Feedback",
+      "description": "Real-time form validation with subtle animations for error and success states.",
+      "input_state_transition": {
+        "duration_ms": 200,
+        "easing": "ease_out_cubic"
+      },
+      "error_appear": {
+        "duration_ms": 300,
+        "easing": "ease_out_quint",
+        "stagger_children_ms": 50,
+        "from": {
+          "opacity": 0,
+          "translate_y_px": -8
+        },
+        "to": {
+          "opacity": 1,
+          "translate_y_px": 0
+        }
+      },
+      "error_border": {
+        "duration_ms": 250,
+        "easing": "ease_out_cubic",
+        "from_border_color": "#e5e7eb",
+        "to_border_color": "#ef4444"
+      },
+      "error_shake": {
+        "duration_ms": 400,
+        "amplitude_px": 8,
+        "frequency": 4,
+        "easing": "ease_out_cubic"
+      },
+      "success_checkmark": {
+        "draw_duration_ms": 500,
+        "easing": "ease_out_quint",
+        "stroke_dasharray": "24 100",
+        "from_stroke_dashoffset": 24,
+        "to_stroke_dashoffset": 0
+      },
+      "helper_text_fade": {
+        "duration_ms": 200,
+        "easing": "standard"
+      },
+      "field_focus_ring": {
+        "duration_ms": 200,
+        "easing": "ease_out_cubic",
+        "width_px": 2,
+        "offset_px": 1
+      },
+      "prefers_reduced_motion": "instant state changes, no shake, no drawing animations"
+    }
+  },
+  "element_specific_animations": {
+    "university_card": {
+      "hover": {
+        "duration_ms": 300,
+        "easing": "ease_out_quint",
+        "transform": "translateY(-4px)",
+        "shadow": "0 20px 40px rgba(0,0,0,0.1)",
+        "scale": 1.02
+      },
+      "focus_visible": {
+        "outline_offset_px": 3,
+        "outline_width_px": 2
+      },
+      "rating_change": {
+        "duration_ms": 300,
+        "easing": "ease_out_cubic"
+      }
+    },
+    "filter_chips": {
+      "select": {
+        "duration_ms": 250,
+        "easing": "ease_out_quint",
+        "scale": "0.9 → 1",
+        "background": "color change",
+        "check_mark_draw_ms": 300
+      },
+      "deselect": {
+        "duration_ms": 200,
+        "easing": "ease_out_cubic",
+        "scale": "1 → 0.9"
+      }
+    },
+    "dropdown_select": {
+      "open": {
+        "duration_ms": 250,
+        "easing": "ease_out_expo",
+        "option_stagger_ms": 30
+      },
+      "close": {
+        "duration_ms": 180,
+        "easing": "ease_out_cubic"
+      }
+    },
+    "modal_dialog": {
+      "open": {
+        "overlay_fade_ms": 200,
+        "overlay_easing": "standard",
+        "dialog_scale": {
+          "duration_ms": 300,
+          "easing": "spring_overshoot",
+          "from": 0.9,
+          "to": 1
+        },
+        "dialog_fade": {
+          "duration_ms": 250,
+          "easing": "ease_out_quint"
+        }
+      },
+      "close": {
+        "overlay_fade_ms": 150,
+        "dialog_scale": {
+          "duration_ms": 200,
+          "easing": "ease_out_cubic",
+          "to": 0.95
+        },
+        "dialog_fade_ms": 150
+      }
+    },
+    "toast_notification": {
+      "enter": {
+        "duration_ms": 200,
+        "easing": "ease_out_quint",
+        "from": {
+          "opacity": 0,
+          "translate_y_px": 10
+        }
+      },
+      "exit": {
+        "duration_ms": 160,
+        "easing": "ease_out_cubic",
+        "to": {
+          "opacity": 0,
+          "translate_y_px": 8
+        }
+      },
+      "auto_dismiss_delay_ms": 3500,
+      "progress_bar_duration_ms": 3500
+    },
+    "avatar_stack": {
+      "enter": {
+        "duration_ms": 400,
+        "stagger_ms": 30,
+        "easing": "ease_out_quint"
+      }
+    },
+    "review_card": {
+      "load": {
+        "duration_ms": 500,
+        "stagger_ms": 60,
+        "easing": "ease_out_quint",
+        "from": {
+          "opacity": 0,
+          "translate_y_px": 20
+        }
+      },
+      "vote_interaction": {
+        "duration_ms": 200,
+        "easing": "ease_out_cubic",
+        "transform": "scale(1.1)"
+      }
+    }
+  },
+  "scroll_driven_animations": {
+    "section_reveal": {
+      "threshold": 0.15,
+      "root_margin_px": "0px 0px -10% 0px",
+      "duration_ms": 700,
+      "easing": "ease_out_quint",
+      "stagger_ms": 80,
+      "from": {
+        "opacity": 0,
+        "translate_y_px": 30
+      },
+      "prefers_reduced_motion": "elements shown statically, no animation",
+      "root_margin_mobile_px": "0px 0px -5% 0px"
+    },
+    "progress_bar_fill": {
+      "duration_ms": 600,
+      "easing": "ease_out_expo",
+      "trigger": "scroll-driven",
+      "spring_smoothing": false
+    },
+    "sticky_header_shrink": {
+      "duration_ms": 250,
+      "easing": "ease_out_cubic",
+      "height_reduction_pct": 30,
+      "shadow_appear": {
+        "duration_ms": 250
+      }
+    }
+  },
+  "performance_targets": {
+    "target_fps": 60,
+    "frame_budget_ms": 16.67,
+    "target_frame_time_ms": 8,
+    "max_js_animation_time_ms": 8,
+    "max_style_recalc_ms": 3,
+    "max_layout_ms": 3,
+    "max_paint_ms": 3,
+    "use_hardware_acceleration": true,
+    "animate_only_transform_and_opacity": true,
+    "avoid_layout_triggering_properties": ["width", "height", "margin", "padding", "top", "left", "right", "bottom"],
+    "use_transform_and_opacity_instead": ["transform: translateX/Y/Z", "transform: scale()", "opacity", "filter: blur()"],
+    "will_change_budget": "use sparingly, only during active animations",
+    "reduce_motion_respect": true,
+    "animation_idle_unsubscribe": true,
+    "prefetch_on_interaction": true
+  },
+  "implementation_notes": {
+    "framer_motion_variants": {
+      "recommended": true,
+      "library": "framer-motion@11",
+      "animate_presence": true,
+      "layout_id_for_shared": true,
+      "use_reduced_motion_hook": "useReducedMotion()",
+      "stagger_children_pattern": "const stagger = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.05, delayChildren: 0.05 } } }"
+    },
+    "reduced_motion_implementation": {
+      "css": "@media (prefers-reduced-motion: reduce) { * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; } }",
+      "js_fallback": "Check matchMedia('(prefers-reduced-motion: reduce)').matches before initializing animations; if true, set final state directly"
+    },
+    "mobile_optimization": {
+      "touch_event_handling": "Use touchstart/touchend for instant feedback instead of hover",
+      "remove_hover_only_effects": true,
+      "increase_touch_targets": "minimum 44x44px",
+      "disable_parallax_on_mobile": true,
+      "reduce_animation_complexity": "simpler easing, shorter durations"
+    },
+    "pakistan_localization": {
+      "urdu_text_direction": "Support RTL for Urdu text with proper animation direction mirroring",
+      "punjabi_text_support": "Ensure Nafees/Mariam Unicode fonts load with font-display: swap",
+      "loading_states": "Localized loading text with same animation timing",
+      "number_formatting": "Use Intl.NumberFormat with 'ur-PK' and 'pa-PK' locales"
+    }
+  },
+  "stagger_formulas": {
+    "university_cards": "delay = 80ms + (i * 80ms)",
+    "form_errors": "delay = 0ms + (i * 50ms)",
+    "filter_chips": "delay = index * 50ms",
+    "dropdown_options": "delay = 100ms + (i * 30ms)",
+    "star_rating_display": "delay = 0ms + (i * 70ms)",
+    "section_reveal": "delay = 150ms + (i * 80ms)",
+    "avatar_stack": "delay = 0ms + (i * 30ms)"
+  }
+}
