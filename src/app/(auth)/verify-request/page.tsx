@@ -1,7 +1,12 @@
+'use client';
+
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Mail, CheckCircle } from 'lucide-react';
 
-export default function VerifyRequestPage() {
+export const dynamic = 'force-dynamic';
+
+function VerifyRequestPage() {
   const searchParams = useSearchParams();
   const email = searchParams?.get('email');
 
@@ -47,5 +52,13 @@ export default function VerifyRequestPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function VerifyRequestPageWrapper() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <VerifyRequestPage />
+    </Suspense>
   );
 }

@@ -1,8 +1,13 @@
+'use client';
+
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Suspense } from 'react';
 import { ArrowLeft, RefreshCw, ShieldAlert } from 'lucide-react';
 
-export default function AuthErrorPage() {
+export const dynamic = 'force-dynamic';
+
+function AuthErrorPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const error = searchParams?.get('error');
@@ -78,5 +83,13 @@ export default function AuthErrorPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AuthErrorPageWrapper() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AuthErrorPage />
+    </Suspense>
   );
 }

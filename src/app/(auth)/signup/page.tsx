@@ -1,10 +1,14 @@
+'use client';
+
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { z } from 'zod';
 import { Loader2, Mail, Lock, User, Building, ArrowLeft, AlertCircle, CheckCircle } from 'lucide-react';
 import { PrismaClient } from '@prisma/client';
 import { hash } from 'bcryptjs';
+
+export const dynamic = 'force-dynamic';
 
 const prisma = new PrismaClient();
 
@@ -24,7 +28,7 @@ const ForgotPasswordSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
 });
 
-export default function SignUpPage() {
+function SignUpPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -499,5 +503,13 @@ export default function SignUpPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SignUpPageWrapper() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SignUpPage />
+    </Suspense>
   );
 }

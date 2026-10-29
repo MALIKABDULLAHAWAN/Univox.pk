@@ -1,11 +1,13 @@
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/lib/auth';
+'use client';
+
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { z } from 'zod';
 import { signIn } from 'next-auth/react';
 import { Loader2, Mail, Lock, ArrowLeft, AlertCircle } from 'lucide-react';
+
+export const dynamic = 'force-dynamic';
 
 const signInSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -16,7 +18,7 @@ const ForgotPasswordSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
 });
 
-export default function SignInPage() {
+function SignInPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -358,5 +360,13 @@ export default function SignInPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SignInPageWrapper() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SignInPage />
+    </Suspense>
   );
 }
