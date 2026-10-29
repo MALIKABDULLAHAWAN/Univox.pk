@@ -36,6 +36,10 @@ model University {
 
   @@index([city, budgetTier])
   @@index([province])
+  @@index([budgetTier, avgTuitionPKR])
+  @@index([budgetTier, cityRankingScore])
+  @@index([budgetTier, provinceRankingScore])
+  @@index([budgetTier, nationalRankingScore])
 }
 
 model Department {
@@ -143,7 +147,7 @@ model Review {
   student         Student @relation(fields: [studentId], references: [id])
   university      University @relation(fields: [universityId], references: [id])
   votes           ReviewVote[]
-  flags           FlagInstance[]  reviewsMade       Review[]
+  flags           FlagInstance[]
 
   @@index([status, createdAt])
   @@index([universityId, rating])
@@ -171,7 +175,7 @@ model InstructorReview {
   instructor      Instructor? @relation(fields: [instructorId], references: [id])
   university      University @relation(fields: [universityId], references: [id])
   votes           ReviewVote[]
-  flags           FlagInstance[]  reviewsMade       Review[]
+  flags           FlagInstance[]
 
   @@index([instructorId, overall])
 }
@@ -197,7 +201,10 @@ model DepartmentReview {
   department      Department @relation(fields: [departmentId], references: [id])
   university      University @relation(fields: [universityId], references: [id])
   votes           ReviewVote[]
-  flags           FlagInstance[]  reviewsMade       Review[]
+  flags           FlagInstance[]
+
+  @@index([status])
+  @@index([overall])
 }
 
 model CourseReview {
@@ -223,6 +230,8 @@ model CourseReview {
   flags             FlagInstance[]
 
   @@index([courseId, workloadRating])
+  @@index([status])
+  @@index([universityId, status])
 }
 
 model UniversityResponse {
@@ -280,17 +289,28 @@ model Message {
 }
 
 model FlagInstance {
-  id            String   @id @default(cuid())
-  reviewId      String
-  reviewerType  String   // "student", "university", "moderator"
-  reviewerId    String?
-  reason        String
-  evidence      String?
-  status        String   @default("pending")
-  resolution    String?
-  createdAt     DateTime @default(now())
-  resolvedAt    DateTime?
+  id                 String   @id @default(cuid())
+  reviewId           String?
+  instructorReviewId String?
+  departmentReviewId String?
+  courseReviewId     String?
+  reviewerType       String   // "student", "university", "moderator"
+  reviewerId         String?
+  reason             String
+  evidence           String?
+  status             String   @default("pending")
+  resolution         String?
+  createdAt          DateTime @default(now())
+  resolvedAt         DateTime?
+
+  review             Review         @relation(fields: [reviewId], references: [id])
+  instructorReview   InstructorReview? @relation(fields: [instructorReviewId], references: [id])
+  departmentReview   DepartmentReview? @relation(fields: [departmentReviewId], references: [id])
+  courseReview       CourseReview?    @relation(fields: [courseReviewId], references: [id])
+  reviewer           Student?       @relation(fields: [reviewerId], references: [id])
 
   @@index([status, createdAt])
   @@index([reviewerType])
+  @@index([reviewerId])
+  @@index([reviewId])
 }
