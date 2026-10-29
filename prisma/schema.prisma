@@ -30,6 +30,9 @@ model University {
   instructors           Instructor[]
   courses                 Course[]
   reviews               Review[]
+  departmentReviews     DepartmentReview[]
+  instructorReviews     InstructorReview[]
+  courseReviews         CourseReview[]
   students              Student[]
   universityResponses   UniversityResponse[]
   createdAt             DateTime    @default(now())
@@ -50,9 +53,10 @@ model Department {
   code          String
   description   String?
   courses       Course[]
-  instructors   Instructor[]
-  reviews       DepartmentReview[]
-  createdAt     DateTime   @default(now())
+  instructors        Instructor[]
+  courseReviews      CourseReview[]
+  reviews            DepartmentReview[]
+  createdAt          DateTime   @default(now())
 
   @@unique([universityId, name])
 }
@@ -64,8 +68,8 @@ model Course {
   instructorId    String?
   university      University @relation(fields: [universityId], references: [id])
   department      Department @relation(fields: [departmentId], references: [id])
-  instructor      Instructor? @relation(fields: [instructorId], references: [id])
-  courseCode      String
+  instructor        Instructor? @relation(fields: [instructorId], references: [id])
+  courseCode        String
   courseName      String
   creditHours     Int
   semester        Int
@@ -93,10 +97,11 @@ model Instructor {
   bio                   String?    @db.Text
   photoUrl              String?
   coursesTaught         Course[]
-  reviews               InstructorReview[]
   ratingsAvg            Float      @default(0)
   reviewsCount          Int        @default(0)
   createdAt             DateTime   @default(now())
+
+  reviews               InstructorReview[]
 
   @@index([name])
 }
@@ -117,9 +122,12 @@ model Student {
   reviews                Review[]
   departmentReviews      DepartmentReview[]
   courseReviews          CourseReview[]
-  messagesReceived        Message[] @relation("messagesReceived")
-
+  messagesReceived       Message[] @relation("messagesReceived")
   messagesSent           Message[] @relation("messagesSent")
+  reviewerFlags          FlagInstance[]
+  instructorReviews      InstructorReview[]
+  peerVerifications      PeerVerification[]
+  reviewVotes            ReviewVote[]
 
 }
 
@@ -148,6 +156,7 @@ model Review {
   university      University @relation(fields: [universityId], references: [id])
   votes           ReviewVote[]
   flags           FlagInstance[]
+  peerVerifications PeerVerification[]
 
   @@index([status, createdAt])
   @@index([universityId, rating])
@@ -174,7 +183,6 @@ model InstructorReview {
   student         Student @relation(fields: [studentId], references: [id])
   instructor      Instructor? @relation(fields: [instructorId], references: [id])
   university      University @relation(fields: [universityId], references: [id])
-  votes           ReviewVote[]
   flags           FlagInstance[]
 
   @@index([instructorId, overall])
@@ -200,7 +208,6 @@ model DepartmentReview {
   student         Student @relation(fields: [studentId], references: [id])
   department      Department @relation(fields: [departmentId], references: [id])
   university      University @relation(fields: [universityId], references: [id])
-  votes           ReviewVote[]
   flags           FlagInstance[]
 
   @@index([status])
@@ -226,7 +233,7 @@ model CourseReview {
   student           Student @relation(fields: [studentId], references: [id])
   course            Course @relation(fields: [courseId], references: [id])
   university        University @relation(fields: [universityId], references: [id])
-  votes             ReviewVote[]
+  department        Department @relation(fields: [departmentId], references: [id])
   flags             FlagInstance[]
 
   @@index([courseId, workloadRating])
@@ -267,8 +274,8 @@ model ReviewVote {
   weight      Float    @default(1.0)
   createdAt   DateTime @default(now())
 
-  review      Review @relation(fields: [reviewId], references: [id])
-  student     Student @relation(fields: [studentId], references: [id])
+  review                Review @relation(fields: [reviewId], references: [id])
+  student               Student @relation(fields: [studentId], references: [id])
 
   @@unique([reviewId, studentId, type])
 }
@@ -303,18 +310,31 @@ model FlagInstance {
   createdAt          DateTime @default(now())
   resolvedAt         DateTime?
 
-  review             Review         @relation(fields: [reviewId], references: [id])
+  review             Review? @relation(fields: [reviewId], references: [id])
   instructorReview   InstructorReview? @relation(fields: [instructorReviewId], references: [id])
   departmentReview   DepartmentReview? @relation(fields: [departmentReviewId], references: [id])
-  courseReview       CourseReview?    @relation(fields: [courseReviewId], references: [id])
-  reviewer           Student?       @relation(fields: [reviewerId], references: [id])
+  courseReview       CourseReview? @relation(fields: [courseReviewId], references: [id])
+  reviewer           Student? @relation(fields: [reviewerId], references: [id])
 
   @@index([status, createdAt])
   @@index([reviewerType])
   @@index([reviewerId])
   @@index([reviewId])
 }
+
 // NextAuth models for authentication
+model User {
+  id            String   @id @default(cuid())
+  name          String?
+  email         String   @unique
+  emailVerified DateTime?
+  image         String?
+
+  accounts    Account[]
+  sessions    Session[]
+  password    Password?
+}
+
 model Account {
   id                       String   @id @default(cuid())
   userId                   String
