@@ -1,0 +1,70 @@
+# Dependencies
+node_modules/
+
+# Environment files
+.env
+.env.local
+.env.production.local
+.env.test
+
+# Build outputs
+.next/
+out/
+build/
+dist/
+
+# Database
+*.sqlite
+*.sqlite-journal
+*.sqliteWAL
+prisma/dev.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# TypeScript
+*.tsbuildinfo
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Testing
+ playwright-report/
+ test-results/
+ playwright/.cache/
+
+# Model weights
+models/
+ai-weights/
+
+# API responses
+cache/
+tmp/
+
+# Docker
+.docker/
+
+# Personal / temporary files
+personal-project/
+scratch/

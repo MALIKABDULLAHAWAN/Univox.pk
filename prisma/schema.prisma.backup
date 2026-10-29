@@ -1,0 +1,292 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model University {
+  id                    String      @id @default(cuid())
+  name                  String
+  slug                  String      @unique
+  location              String
+  city                  String
+  province              String
+  type                  String
+  hECApproved           Boolean     @default(false)
+  description           String
+  logoUrl               String?
+  website               String?
+  budgetTier            String      // "Low" | "Medium" | "High"
+  avgTuitionPKR         Int
+  scholarshipAvailable  Boolean     @default(false)
+  scholarshipAvgAmount  Int?
+  cityRankingScore      Float       @default(0)
+  provinceRankingScore  Float       @default(0)
+  nationalRankingScore  Float       @default(0)
+  departments           Department[]
+  instructors           Instructor[]
+  reviews               Review[]
+  universityResponses   UniversityResponse[]
+  courses               Course[]
+  createdAt             DateTime    @default(now())
+
+  @@index([city, budgetTier])
+  @@index([province])
+}
+
+model Department {
+  id            String     @id @default(cuid())
+  universityId  String
+  university    University @relation(fields: [universityId], references: [id])
+  name          String
+  code          String
+  description   String?
+  courses       Course[]
+  instructors   Instructor[]
+  reviews       DepartmentReview[]
+  createdAt     DateTime   @default(now())
+
+  @@unique([universityId, name])
+}
+
+model Course {
+  id              String     @id @default(cuid())
+  universityId    String
+  departmentId    String
+  instructorId    String?
+  university      University @relation(fields: [universityId], references: [id])
+  department      Department @relation(fields: [departmentId], references: [id])
+  instructor      Instructor? @relation(fields: [instructorId], references: [id])
+  courseCode      String
+  courseName      String
+  creditHours     Int
+  semester        Int
+  year            Int
+  semesterType    String
+  syllabus        Json[]
+  prospectusUrl   String?
+  reviews         CourseReview[]
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  @@unique([universityId, departmentId, semester, year, courseCode])
+  @@index([year, semesterType])
+}
+
+model Instructor {
+  id                    String     @id @default(cuid())
+  universityId          String
+  departmentId          String
+  university            University @relation(fields: [universityId], references: [id])
+  department            Department @relation(fields: [departmentId], references: [id])
+  name                  String
+  email                 String?
+  designation           String?
+  bio                   String?    @db.Text
+  photoUrl              String?
+  coursesTaught         Course[]
+  reviews               InstructorReview[]
+  ratingsAvg            Float      @default(0)
+  reviewsCount          Int        @default(0)
+  createdAt             DateTime   @default(now())
+
+  @@index([name])
+}
+
+model Student {
+  id                     String     @id @default(cuid())
+  email                  String     @unique
+  universityId           String
+  university             University @relation(fields: [universityId], references: [id])
+  studentIdHash          String     @unique
+  verificationStatus     String     @default("pending")
+  credibilityScore       Float      @default(1.0)
+  canRate                Boolean    @default(false)
+  peerRatingsMade        Int        @default(0)
+  peerVerificationsMade  Int        @default(0)
+  createdAt              DateTime   @default(now())
+  lastLoginAt            DateTime?
+  reviews                Review[]
+  departmentReviews      DepartmentReview[]
+  courseReviews          CourseReview[]
+  messagesSent           Message[]
+}
+
+model Review {
+  id              String   @id @default(cuid())
+  type            String   // "university"
+  universityId    String
+  targetId        String   // University ID for type="university"
+  studentId       String
+  content         String   @db.Text
+  rating          Float    @default(0)
+  overall         Float    @default(0)
+  teaching        Float    @default(0)
+  clarity         Float    @default(0)
+  engagement      Float    @default(0)
+  workload        Float    @default(0)
+  difficulty      Float    @default(0)
+  wouldRecommend  Boolean
+  evidenceHash    String   // Blockchain hash storage
+  isAnonymous     Boolean  @default(true)
+  verifiedBy      Int      @default(0)
+  status          String   @default("pending") // pending, verified, flagged
+  createdAt       DateTime @default(now())
+
+  student         Student @relation(fields: [studentId], references: [id])
+  university      University @relation(fields: [universityId], references: [id])
+  votes           ReviewVote[]
+  flags           FlagInstance[]
+
+  @@index([status, createdAt])
+  @@index([universityId, rating])
+}
+
+model InstructorReview {
+  id              String   @id @default(cuid())
+  instructorId    String
+  universityId    String
+  studentId       String
+  overall         Float    @default(0)
+  teaching        Float    @default(0)
+  clarity         Float    @default(0)
+  engagement      Float    @default(0)
+  workload        Float    @default(0)
+  wouldRecommend  Boolean
+  comment         String?  @db.Text
+  evidenceHash    String   // Blockchain proof
+  isAnonymous     Boolean  @default(true)
+  verifiedBy      Int      @default(0)
+  status          String   @default("pending")
+  createdAt       DateTime @default(now())
+
+  student         Student @relation(fields: [studentId], references: [id])
+  instructor      Instructor? @relation(fields: [instructorId], references: [id])
+  university      University @relation(fields: [universityId], references: [id])
+  votes           ReviewVote[]
+  flags           FlagInstance[]
+
+  @@index([instructorId, overall])
+}
+
+model DepartmentReview {
+  id              String   @id @default(cuid())
+  departmentId    String
+  universityId    String
+  studentId       String
+  content         String   @db.Text
+  overall         Float    @default(0)
+  facilities      Float    @default(0)
+  faculty         Float    @default(0)
+  infrastructure  Float    @default(0)
+  wouldRecommend  Boolean
+  evidenceHash    String
+  isAnonymous     Boolean  @default(true)
+  verifiedBy      Int      @default(0)
+  status          String   @default("pending")
+  createdAt       DateTime @default(now())
+
+  student         Student @relation(fields: [studentId], references: [id])
+  department      Department @relation(fields: [departmentId], references: [id])
+  university      University @relation(fields: [universityId], references: [id])
+  votes           ReviewVote[]
+  flags           FlagInstance[]
+}
+
+model CourseReview {
+  id                String   @id @default(cuid())
+  courseId          String
+  universityId      String
+  departmentId      String
+  studentId         String
+  workloadRating    Float    @default(0)
+  difficultyRating  Float    @default(0)
+  contentQuality    Float    @default(0)
+  commentText       String   @db.Text
+  evidenceHash      String
+  isAnonymous       Boolean  @default(true)
+  verifiedBy        Int      @default(0)
+  status            String   @default("pending")
+  createdAt         DateTime @default(now())
+
+  student           Student @relation(fields: [studentId], references: [id])
+  course            Course @relation(fields: [courseId], references: [id])
+  university        University @relation(fields: [universityId], references: [id])
+  votes             ReviewVote[]
+  flags             FlagInstance[]
+
+  @@index([courseId, workloadRating])
+}
+
+model UniversityResponse {
+  id          String   @id @default(cuid())
+  universityId String
+  reviewId    String   // For responding to university reviews
+  content     String   @db.Text
+  createdAt   DateTime @default(now())
+
+  university University @relation(fields: [universityId], references: [id])
+}
+
+model PeerVerification {
+  id          String   @id @default(cuid())
+  reviewId    String
+  reviewerId  String   // The peer who verifies
+  courseId    String?  // For context
+  vote        String   // "approve" or "remove"
+  evidence    String?
+  createdAt   DateTime @default(now())
+
+  review      Review @relation(fields: [reviewId], references: [id])
+  reviewer    Student @relation(fields: [reviewerId], references: [id])
+
+  @@index([reviewId, createdAt])
+}
+
+model ReviewVote {
+  id          String   @id @default(cuid())
+  reviewId    String
+  studentId   String
+  type        String   // "helpfulness", "like", "dislike"
+  weight      Float    @default(1.0)
+  createdAt   DateTime @default(now())
+
+  review      Review @relation(fields: [reviewId], references: [id])
+  student     Student @relation(fields: [studentId], references: [id])
+
+  @@unique([reviewId, studentId, type])
+}
+
+model Message {
+  id          String   @id @default(cuid())
+  fromId      String
+  toId        String
+  content     String   @db.Text
+  isRead      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  fromStudent Student @relation("sentMessages", fields: [fromId], references: [id])
+  toStudent   Student @relation("receivedMessages", fields: [toId], references: [id])
+
+  @@index([fromId, toId])
+  @@index([createdAt])
+}
+
+model FlagInstance {
+  id            String   @id @default(cuid())
+  reviewId      String
+  reviewerType  String   // "student", "university", "moderator"
+  reviewerId    String?
+  reason        String
+  evidence      String?
+  status        String   @default("pending")
+  resolution    String?
+  createdAt     DateTime @default(now())
+  resolvedAt    DateTime?
+
+  @@index([status, createdAt])
+  @@index([reviewerType])
+}

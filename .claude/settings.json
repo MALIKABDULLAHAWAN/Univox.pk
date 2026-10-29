@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "default": ["Read", "Write", "Bash"],
+    "deny": []
+  },
+  "autoExecution": {
+    "enabled": true,
+    "sandbox": false,
+    "maxTokens": 100000,
+    "maxResponseTokens": 32000
+  },
+  "features": {
+    "prompt caching": true,
+    "code recommendation": true
+  }
+}
